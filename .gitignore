@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.env
+*.sqlite3
+
+# Database
+ecommerce_project/backend/ecommerce_api/src/database/app.db
+
+# Node
+node_modules/
+dist/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Frontend build
+ecommerce_project/frontend/ecommerce_frontend/dist/
+
+# VSCode
+.vscode/

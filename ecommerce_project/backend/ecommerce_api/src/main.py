@@ -23,6 +23,11 @@ app.register_blueprint(user_bp, url_prefix='/api')
 app.register_blueprint(product_bp, url_prefix='/api')
 app.register_blueprint(order_bp, url_prefix='/api')
 
+# Rota para servir imagens
+@app.route('/api/images/<path:filename>')
+def serve_image(filename):
+    return send_from_directory(os.path.join(app.static_folder, 'images'), filename)
+
 # Configuração do banco de dados
 app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(os.path.dirname(__file__), 'database', 'app.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

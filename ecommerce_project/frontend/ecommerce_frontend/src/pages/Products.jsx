@@ -53,7 +53,7 @@ const Products = () => {
       <div className="mb-8">
         <h1 className="text-3xl font-bold mb-4">Catálogo de Produtos</h1>
         <p className="text-gray-600 mb-6">
-          Encontre os melhores produtos de tecnologia com preços incríveis
+          Encontre os melhores materiais escolares com preços incríveis
         </p>
 
         {/* Search Bar */}

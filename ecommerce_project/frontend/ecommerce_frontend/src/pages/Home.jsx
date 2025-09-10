@@ -35,10 +35,10 @@ const Home = () => {
       <section className="bg-gradient-to-r from-blue-600 to-purple-600 text-white py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Bem-vindo à TechStore
+            Bem-vindo à Vendas Escolares
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
-            Sua loja online de tecnologia com os melhores produtos e preços incríveis
+            Sua loja online de material escolar com os melhores produtos para seu sucesso acadêmico
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/products">
@@ -55,15 +55,15 @@ const Home = () => {
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">
-            Por que escolher a TechStore?
+            Por que escolher a Vendas Escolares?
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center p-6">
               <CardContent className="pt-6">
                 <Truck className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Entrega Rápida</h3>
+                <h3 className="text-xl font-semibold mb-2">Entrega para Escolas</h3>
                 <p className="text-gray-600">
-                  Entregamos seus produtos com rapidez e segurança
+                  Entregamos diretamente em escolas e instituições de ensino
                 </p>
               </CardContent>
             </Card>
@@ -71,9 +71,9 @@ const Home = () => {
             <Card className="text-center p-6">
               <CardContent className="pt-6">
                 <Shield className="h-12 w-12 text-green-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Compra Segura</h3>
+                <h3 className="text-xl font-semibold mb-2">Qualidade Garantida</h3>
                 <p className="text-gray-600">
-                  Seus dados estão protegidos com nossa segurança avançada
+                  Produtos de alta qualidade das melhores marcas do mercado
                 </p>
               </CardContent>
             </Card>
@@ -81,9 +81,9 @@ const Home = () => {
             <Card className="text-center p-6">
               <CardContent className="pt-6">
                 <CreditCard className="h-12 w-12 text-purple-600 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold mb-2">Pagamento Fácil</h3>
+                <h3 className="text-xl font-semibold mb-2">Preços Acessíveis</h3>
                 <p className="text-gray-600">
-                  Múltiplas formas de pagamento para sua comodidade
+                  Melhores preços do mercado e descontos para compras em quantidade
                 </p>
               </CardContent>
             </Card>
@@ -135,7 +135,7 @@ const Home = () => {
             Pronto para começar suas compras?
           </h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Cadastre-se agora e aproveite ofertas exclusivas em nossa loja
+            Cadastre-se agora e aproveite descontos especiais para escolas e professores
           </p>
           <Link to="/register">
             <Button size="lg" className="text-lg px-8">
