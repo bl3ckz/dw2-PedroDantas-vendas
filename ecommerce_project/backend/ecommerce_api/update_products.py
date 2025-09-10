@@ -32,13 +32,13 @@ produtos_escolares = [
         "name": "Calculadora Científica HP 10s+",
         "description": "Calculadora científica HP com display de 2 linhas, funções estatísticas e científicas",
         "price": 1599.99,
-        "image": "https://www.hpstore.com.br/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/c/a/calculadora-cientifica-hp-10s-2.jpg"
+        "image": "/images/calculadora-hp.jpg"
     },
     {
         "name": "Mesa Digitalizadora",
         "description": "Mesa digitalizadora para aulas de arte e desenho digital",
         "price": 1299.99,
-        "image": "https://images.unsplash.com/photo-1589135364686-82ce0a12e7b6?w=500&h=500&fit=crop"
+        "image": "/images/mesa-digitalizadora.jpg"
     }
 ]
 
