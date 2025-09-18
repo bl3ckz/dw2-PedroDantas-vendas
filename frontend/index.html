@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loja Escolar - Produtos Escolares Online</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo" aria-label="Loja Escolar - Página inicial">
+                🎒 Loja Escolar
+            </a>
+            
+            <div class="search-container">
+                <input 
+                    type="search" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Buscar produtos escolares..." 
+                    aria-label="Buscar produtos"
+                    autocomplete="off"
+                >
+            </div>
+            
+            <div class="auth-buttons" id="authButtons">
+                <a href="login.html" class="btn-auth">Entrar</a>
+                <a href="register.html" class="btn-auth">Cadastrar</a>
+            </div>
+            
+            <div class="user-menu" id="userMenu" style="display: none;">
+                <a href="admin.html" class="btn-auth">Admin</a>
+                <button class="btn-auth" id="logoutBtn">Sair</button>
+            </div>
+            
+            <button class="cart-button" id="cartButton" aria-label="Abrir carrinho de compras">
+                🛒 Carrinho
+                <span class="cart-badge" id="cartBadge" aria-label="Itens no carrinho">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Controles do Catálogo -->
+        <section class="catalog-controls" aria-label="Controles de filtro e ordenação">
+            <div class="control-group">
+                <label for="sortSelect" class="control-label">Ordenar por:</label>
+                <select id="sortSelect" class="control-select" aria-label="Ordenar produtos por">
+                    <option value="name">Nome</option>
+                    <option value="price">Preço</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="orderSelect" class="control-label">Ordem:</label>
+                <select id="orderSelect" class="control-select" aria-label="Ordem de classificação">
+                    <option value="asc">Crescente</option>
+                    <option value="desc">Decrescente</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Grid de Produtos -->
+        <section class="products-section" aria-label="Catálogo de produtos">
+            <div class="products-grid" id="productsGrid" role="region" aria-live="polite" aria-label="Lista de produtos">
+                <!-- Produtos serão carregados aqui via JavaScript -->
+            </div>
+            
+            <!-- Loading State -->
+            <div id="loadingState" class="text-center" style="display: none;">
+                <div class="spinner"></div>
+                <p>Carregando produtos...</p>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="emptyState" class="text-center" style="display: none;">
+                <p>Nenhum produto encontrado.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal/Drawer do Carrinho -->
+    <div class="cart-overlay" id="cartOverlay" aria-hidden="true">
+        <aside class="cart-drawer" role="dialog" aria-labelledby="cartTitle" aria-modal="true">
+            <header class="cart-header">
+                <h2 class="cart-title" id="cartTitle">Seu Carrinho</h2>
+                <button class="btn-close-cart" id="closeCartBtn" aria-label="Fechar carrinho">×</button>
+            </header>
+            
+            <div class="cart-content" id="cartContent">
+                <div class="cart-empty" id="cartEmpty">
+                    <p>Seu carrinho está vazio</p>
+                    <p>Adicione alguns produtos para começar!</p>
+                </div>
+                
+                <div id="cartItems" class="cart-items">
+                    <!-- Itens do carrinho serão carregados aqui -->
+                </div>
+            </div>
+            
+            <footer class="cart-footer" id="cartFooter" style="display: none;">
+                <!-- Seção de Cupom -->
+                <div class="coupon-section">
+                    <h3 class="coupon-title">Cupom de Desconto</h3>
+                    <div class="coupon-input-group" id="couponInputGroup">
+                        <input 
+                            type="text" 
+                            id="couponInput" 
+                            class="coupon-input" 
+                            placeholder="Digite o código do cupom"
+                            aria-label="Código do cupom de desconto"
+                            maxlength="20"
+                        >
+                        <button class="btn-apply-coupon" id="applyCouponBtn">Aplicar</button>
+                    </div>
+                    
+                    <div class="coupon-applied" id="couponApplied" style="display: none;">
+                        <span id="couponAppliedText">Cupom ALUNO10 aplicado (10% off)</span>
+                        <button class="btn-remove-coupon" id="removeCouponBtn" aria-label="Remover cupom">×</button>
+                    </div>
+                </div>
+                
+                <!-- Totais -->
+                <div class="cart-totals">
+                    <div class="total-line">
+                        <span>Subtotal:</span>
+                        <span id="cartSubtotal">R$ 0,00</span>
+                    </div>
+                    <div class="total-line" id="discountLine" style="display: none;">
+                        <span>Desconto:</span>
+                        <span class="discount-amount" id="cartDiscount">- R$ 0,00</span>
+                    </div>
+                    <div class="total-line final">
+                        <span>Total:</span>
+                        <span id="cartTotal">R$ 0,00</span>
+                    </div>
+                </div>
+                
+                <!-- Botão Finalizar -->
+                <button class="btn-checkout" id="checkoutBtn" disabled>
+                    Finalizar Pedido
+                </button>
+            </footer>
+        </aside>
+    </div>
+
+    <!-- Alerts/Toasts Container -->
+    <div id="alertsContainer" aria-live="assertive" aria-atomic="true" style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 3000;
+        max-width: 350px;
+    "></div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>

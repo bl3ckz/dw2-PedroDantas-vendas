@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração - Loja Escolar</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo" aria-label="Loja Escolar - Página inicial">
+                🎒 Loja Escolar
+            </a>
+            
+            <div class="auth-buttons">
+                <a href="index.html" class="btn-auth">← Voltar para a loja</a>
+                <button class="btn-auth" id="logoutBtn">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-container">
+        <header class="admin-header">
+            <h1 class="admin-title">Administração de Produtos</h1>
+            <button class="btn-secondary" id="newProductBtn">+ Novo Produto</button>
+        </header>
+
+        <!-- Formulário de Produto -->
+        <section class="admin-form" id="productForm" style="display: none;">
+            <h2 id="formTitle">Novo Produto</h2>
+            
+            <form id="productFormElement" novalidate>
+                <input type="hidden" id="productId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productName" class="form-label">Nome do Produto *</label>
+                        <input 
+                            type="text" 
+                            id="productName" 
+                            name="name" 
+                            class="form-input" 
+                            placeholder="Nome do produto"
+                            required 
+                            minlength="3"
+                            maxlength="60"
+                            aria-describedby="productNameError"
+                        >
+                        <div id="productNameError" class="form-error" aria-live="polite"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productCategory" class="form-label">Categoria *</label>
+                        <select 
+                            id="productCategory" 
+                            name="category" 
+                            class="control-select" 
+                            required
+                            aria-describedby="productCategoryError"
+                        >
+                            <option value="">Selecione uma categoria</option>
+                            <option value="Cadernos">Cadernos</option>
+                            <option value="Mochilas">Mochilas</option>
+                            <option value="Canetas">Canetas</option>
+                            <option value="Acessórios">Acessórios</option>
+                        </select>
+                        <div id="productCategoryError" class="form-error" aria-live="polite"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="productDescription" class="form-label">Descrição</label>
+                    <textarea 
+                        id="productDescription" 
+                        name="description" 
+                        class="form-textarea" 
+                        placeholder="Descrição detalhada do produto"
+                        rows="3"
+                    ></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productPrice" class="form-label">Preço (R$) *</label>
+                        <input 
+                            type="number" 
+                            id="productPrice" 
+                            name="price" 
+                            class="form-input" 
+                            placeholder="0.00"
+                            required 
+                            min="0.01"
+                            step="0.01"
+                            aria-describedby="productPriceError"
+                        >
+                        <div id="productPriceError" class="form-error" aria-live="polite"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productStock" class="form-label">Estoque *</label>
+                        <input 
+                            type="number" 
+                            id="productStock" 
+                            name="stock" 
+                            class="form-input" 
+                            placeholder="0"
+                            required 
+                            min="0"
+                            aria-describedby="productStockError"
+                        >
+                        <div id="productStockError" class="form-error" aria-live="polite"></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="productSku" class="form-label">SKU (Código)</label>
+                        <input 
+                            type="text" 
+                            id="productSku" 
+                            name="sku" 
+                            class="form-input" 
+                            placeholder="Código único do produto"
+                            maxlength="100"
+                            aria-describedby="productSkuError"
+                        >
+                        <div id="productSkuError" class="form-error" aria-live="polite"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productImageUrl" class="form-label">URL da Imagem</label>
+                        <input 
+                            type="url" 
+                            id="productImageUrl" 
+                            name="image_url" 
+                            class="form-input" 
+                            placeholder="https://exemplo.com/imagem.jpg"
+                            maxlength="500"
+                            aria-describedby="productImageUrlError"
+                        >
+                        <div id="productImageUrlError" class="form-error" aria-live="polite"></div>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="display: flex; gap: var(--espacamento-md);">
+                    <button type="submit" class="btn-primary" id="saveProductBtn">
+                        <span id="saveProductBtnText">Salvar Produto</span>
+                        <span id="saveProductBtnLoading" class="spinner" style="display: none;"></span>
+                    </button>
+                    
+                    <button type="button" class="btn-secondary" id="cancelFormBtn">Cancelar</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Lista de Produtos -->
+        <section class="products-table">
+            <h2>Produtos Cadastrados</h2>
+            
+            <div id="loadingProducts" class="text-center" style="display: none;">
+                <div class="spinner"></div>
+                <p>Carregando produtos...</p>
+            </div>
+            
+            <div id="productsTableContainer">
+                <table class="table" id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Categoria</th>
+                            <th>Preço</th>
+                            <th>Estoque</th>
+                            <th>SKU</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productsTableBody">
+                        <!-- Produtos serão carregados aqui -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="emptyProducts" class="text-center" style="display: none;">
+                <p>Nenhum produto cadastrado ainda.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Alerts Container -->
+    <div id="alertsContainer" aria-live="assertive" aria-atomic="true" style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 3000;
+        max-width: 350px;
+    "></div>
+
+    <script>
+        // Configuração da API
+        const API_BASE = 'http://127.0.0.1:8000';
+
+        // Estado do formulário
+        let editingProductId = null;
+
+        // Utilidades
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('pt-BR', { 
+                style: 'currency', 
+                currency: 'BRL' 
+            }).format(value);
+        }
+
+        function showAlert(message, type = 'error') {
+            const container = document.getElementById('alertsContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()" style="background: none; border: none; color: inherit; margin-left: auto; cursor: pointer;">×</button>
+            `;
+            container.appendChild(alert);
+            
+            setTimeout(() => {
+                if (alert.parentElement) {
+                    alert.remove();
+                }
+            }, 5000);
+        }
+
+        function setLoading(button, isLoading) {
+            const textElement = button.querySelector('[id$="Text"]');
+            const loadingElement = button.querySelector('[id$="Loading"]');
+            
+            if (isLoading) {
+                button.disabled = true;
+                if (textElement) textElement.style.display = 'none';
+                if (loadingElement) loadingElement.style.display = 'inline-block';
+            } else {
+                button.disabled = false;
+                if (textElement) textElement.style.display = 'inline';
+                if (loadingElement) loadingElement.style.display = 'none';
+            }
+        }
+
+        function clearFormErrors(form) {
+            const errorElements = form.querySelectorAll('.form-error');
+            errorElements.forEach(element => {
+                element.textContent = '';
+                element.style.display = 'none';
+            });
+            
+            const inputs = form.querySelectorAll('.form-input, .control-select');
+            inputs.forEach(input => {
+                input.style.borderColor = '';
+            });
+        }
+
+        function showFieldError(fieldName, message) {
+            const field = document.getElementById(fieldName);
+            const errorElement = document.getElementById(fieldName + 'Error');
+            
+            if (field && errorElement) {
+                field.style.borderColor = 'var(--cor-erro)';
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                errorElement.className = 'form-error alert-error';
+                errorElement.style.padding = 'var(--espacamento-sm)';
+                errorElement.style.borderRadius = 'var(--borda-radius-sm)';
+                errorElement.style.marginTop = 'var(--espacamento-xs)';
+                errorElement.style.fontSize = 'var(--tamanho-texto-xs)';
+            }
+        }
+
+        // API calls
+        async function apiCall(endpoint, options = {}) {
+            const token = localStorage.getItem('authToken');
+            
+            const defaultHeaders = {
+                'Content-Type': 'application/json'
+            };
+            
+            if (token) {
+                defaultHeaders['Authorization'] = `Bearer ${token}`;
+            }
+            
+            const config = {
+                headers: defaultHeaders,
+                ...options
+            };
+            
+            const response = await fetch(`${API_BASE}${endpoint}`, config);
+            
+            if (response.status === 401) {
+                localStorage.removeItem('authToken');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            const data = await response.json();
+            
+            if (!response.ok) {
+                throw new Error(data.detail || 'Erro na API');
+            }
+            
+            return data;
+        }
+
+        // Produtos
+        async function loadProducts() {
+            const loadingElement = document.getElementById('loadingProducts');
+            const tableContainer = document.getElementById('productsTableContainer');
+            const emptyElement = document.getElementById('emptyProducts');
+            const tableBody = document.getElementById('productsTableBody');
+            
+            loadingElement.style.display = 'block';
+            tableContainer.style.display = 'none';
+            emptyElement.style.display = 'none';
+            
+            try {
+                const response = await apiCall('/products?page_size=100');
+                const products = response.data;
+                
+                if (products.length === 0) {
+                    emptyElement.style.display = 'block';
+                } else {
+                    tableBody.innerHTML = '';
+                    
+                    products.forEach(product => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${product.name}</td>
+                            <td>${product.category}</td>
+                            <td>${formatCurrency(parseFloat(product.price))}</td>
+                            <td>${product.stock}</td>
+                            <td>${product.sku || '-'}</td>
+                            <td>
+                                <button class="btn-small btn-edit" onclick="editProduct(${product.id})" aria-label="Editar produto ${product.name}">Editar</button>
+                                <button class="btn-small btn-delete" onclick="deleteProduct(${product.id}, '${product.name}')" aria-label="Excluir produto ${product.name}">Excluir</button>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+                    
+                    tableContainer.style.display = 'block';
+                }
+                
+            } catch (error) {
+                console.error('Erro ao carregar produtos:', error);
+                showAlert('Erro ao carregar produtos: ' + error.message, 'error');
+                emptyElement.style.display = 'block';
+            } finally {
+                loadingElement.style.display = 'none';
+            }
+        }
+
+        async function saveProduct(productData) {
+            const endpoint = editingProductId ? `/products/${editingProductId}` : '/products';
+            const method = editingProductId ? 'PUT' : 'POST';
+            
+            return await apiCall(endpoint, {
+                method,
+                body: JSON.stringify(productData)
+            });
+        }
+
+        async function editProduct(id) {
+            try {
+                const product = await apiCall(`/products/${id}`);
+                
+                // Preencher formulário
+                document.getElementById('productId').value = product.id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productCategory').value = product.category;
+                document.getElementById('productDescription').value = product.description || '';
+                document.getElementById('productPrice').value = parseFloat(product.price);
+                document.getElementById('productStock').value = product.stock;
+                document.getElementById('productSku').value = product.sku || '';
+                document.getElementById('productImageUrl').value = product.image_url || '';
+                
+                editingProductId = id;
+                document.getElementById('formTitle').textContent = 'Editar Produto';
+                document.getElementById('saveProductBtnText').textContent = 'Atualizar Produto';
+                document.getElementById('productForm').style.display = 'block';
+                
+                // Scroll para o formulário
+                document.getElementById('productForm').scrollIntoView({ behavior: 'smooth' });
+                
+            } catch (error) {
+                console.error('Erro ao carregar produto:', error);
+                showAlert('Erro ao carregar produto: ' + error.message, 'error');
+            }
+        }
+
+        async function deleteProduct(id, name) {
+            if (!confirm(`Tem certeza que deseja excluir o produto "${name}"?`)) {
+                return;
+            }
+            
+            try {
+                await apiCall(`/products/${id}`, { method: 'DELETE' });
+                showAlert('Produto excluído com sucesso!', 'success');
+                await loadProducts();
+            } catch (error) {
+                console.error('Erro ao excluir produto:', error);
+                showAlert('Erro ao excluir produto: ' + error.message, 'error');
+            }
+        }
+
+        // Validação
+        function validateForm(formData) {
+            const errors = {};
+            
+            if (!formData.name || formData.name.length < 3 || formData.name.length > 60) {
+                errors.productName = 'O nome deve ter entre 3 e 60 caracteres';
+            }
+            
+            if (!formData.category) {
+                errors.productCategory = 'Selecione uma categoria';
+            }
+            
+            if (!formData.price || parseFloat(formData.price) < 0.01) {
+                errors.productPrice = 'O preço deve ser maior que R$ 0,00';
+            }
+            
+            if (formData.stock === '' || parseInt(formData.stock) < 0) {
+                errors.productStock = 'O estoque não pode ser negativo';
+            }
+            
+            if (formData.image_url && !isValidUrl(formData.image_url)) {
+                errors.productImageUrl = 'Insira uma URL válida';
+            }
+            
+            return errors;
+        }
+
+        function isValidUrl(string) {
+            try {
+                new URL(string);
+                return true;
+            } catch (_) {
+                return false;
+            }
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Verificar autenticação
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Carregar produtos
+            loadProducts();
+            
+            // Botões
+            document.getElementById('newProductBtn').addEventListener('click', function() {
+                editingProductId = null;
+                document.getElementById('formTitle').textContent = 'Novo Produto';
+                document.getElementById('saveProductBtnText').textContent = 'Salvar Produto';
+                document.getElementById('productFormElement').reset();
+                clearFormErrors(document.getElementById('productFormElement'));
+                document.getElementById('productForm').style.display = 'block';
+                document.getElementById('productForm').scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            document.getElementById('cancelFormBtn').addEventListener('click', function() {
+                document.getElementById('productForm').style.display = 'none';
+                document.getElementById('productFormElement').reset();
+                clearFormErrors(document.getElementById('productFormElement'));
+                editingProductId = null;
+            });
+            
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                localStorage.removeItem('authToken');
+                window.location.href = 'index.html';
+            });
+            
+            // Formulário
+            document.getElementById('productFormElement').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = {
+                    name: formData.get('name'),
+                    category: formData.get('category'),
+                    description: formData.get('description'),
+                    price: parseFloat(formData.get('price')),
+                    stock: parseInt(formData.get('stock')),
+                    sku: formData.get('sku') || undefined,
+                    image_url: formData.get('image_url') || undefined
+                };
+                
+                // Limpar erros
+                clearFormErrors(this);
+                
+                // Validar
+                const errors = validateForm(data);
+                if (Object.keys(errors).length > 0) {
+                    Object.entries(errors).forEach(([field, message]) => {
+                        showFieldError(field, message);
+                    });
+                    return;
+                }
+                
+                const saveBtn = document.getElementById('saveProductBtn');
+                setLoading(saveBtn, true);
+                
+                try {
+                    await saveProduct(data);
+                    
+                    showAlert(
+                        editingProductId ? 'Produto atualizado com sucesso!' : 'Produto criado com sucesso!',
+                        'success'
+                    );
+                    
+                    document.getElementById('productForm').style.display = 'none';
+                    this.reset();
+                    editingProductId = null;
+                    await loadProducts();
+                    
+                } catch (error) {
+                    console.error('Erro ao salvar produto:', error);
+                    showAlert('Erro ao salvar produto: ' + error.message, 'error');
+                } finally {
+                    setLoading(saveBtn, false);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
